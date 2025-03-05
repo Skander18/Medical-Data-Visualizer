@@ -4,18 +4,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 1
+#read the data from medical_examination.csv
 df = pd.read_csv('medical_examination.csv')
 
 # 2
+#calculate the BMI in order to determine if a person is overweight 
 df['bmi'] = df['weight'] / ((df['height'] / 100)**2)
 
 df['overweight'] = (df['bmi'] > 25).astype(int)
 
 # 3
+#Normalize data by making 0 always good and 1 always bad
 df['cholesterol'] = (df['cholesterol'] > 1).astype(int)
 df['gluc'] = (df['gluc'] > 1).astype(int)
 
 # 4
+#Categorical Plot
 def draw_cat_plot():
     # 5
     df_cat = pd.melt(df, id_vars=['cardio'], value_vars=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight'],
@@ -79,8 +83,22 @@ def draw_heat_map():
     print("Masque pour le triangle supérieur : ")
     print(mask)
 
+    # 14 
+    # Configure the figure and axes
+    fig, ax = plt.subplots(figsize=(8,6), dpi=100) # Taille de la figure : 8x6 pouces, résolution : 100 DPI
 
-
-
+    # 15 
+    # Plot the heatmap with the mask
+    sns.heatmap(corr, 
+                mask=mask, # Mask for the upper triangle
+                annot=True, 
+                fmt=".2f", 
+                cmap="coolwarm", 
+                vmin=-1, 
+                vmax=1, 
+                square=True,
+                cbar_kws={"shrink":0.8}, 
+                ax=ax) # Axes on which to draw the heatmap
+    # 16
     fig.savefig('heatmap.png')
     return fig
